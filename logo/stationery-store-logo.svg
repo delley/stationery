@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="693"
+   height="133"
+   viewBox="0 0 693.00001 133"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="stationary-store-logo.svg"
+   inkscape:export-filename="/arquivos/estudos/java/workspaces/grupo_estudo/stationery/src/main/resources/logo/stationary-store-logo.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.6982394"
+     inkscape:cx="351.42857"
+     inkscape:cy="51.428571"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     width="693px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1020"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="stationery-store"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-919.36215)">
+    <g
+       id="g4181">
+      <g
+         id="g4843">
+        <g
+           id="g4806"
+           transform="matrix(0.82651731,0,0,0.82651731,22.339826,163.69911)">
+          <path
+             id="path5336-6"
+             sodipodi:nodetypes="ccccc"
+             style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+             inkscape:connector-curvature="0"
+             d="m 106.42466,973.44334 -49.003381,48.67546 -46.683391,12.425 12.504943,-46.35639 49.507845,-49.17649" />
+          <rect
+             id="rect5338-48"
+             style="fill:#000200"
+             transform="matrix(-0.26664918,-0.96379366,0.70947695,-0.70472864,0,0)"
+             rx="2.4283097"
+             ry="2.412677"
+             height="70.345314"
+             width="12.671972"
+             y="-248.11513"
+             x="-880.31348" />
+          <rect
+             id="rect5338-4-2"
+             ry="2.4126661"
+             style="fill:#000200"
+             rx="1.826712"
+             transform="matrix(-0.70947693,-0.70472866,0.70947693,-0.70472866,0,0)"
+             height="71.39566"
+             width="22.093"
+             y="-678.0144"
+             x="-752.62573" />
+          <rect
+             id="rect5338-1-1"
+             style="fill:#000200"
+             transform="matrix(0.96635775,0.25720166,0.70947695,-0.70472864,0,0)"
+             rx="2.4426985"
+             ry="2.412677"
+             height="71.395981"
+             width="12.792501"
+             y="-1097.9219"
+             x="828.89124" />
+          <path
+             id="path5336-1-6"
+             style="fill:#000000;stroke:#000000;stroke-width:3.46527481;stroke-linecap:round;stroke-linejoin:round"
+             inkscape:connector-curvature="0"
+             d="m 10.749872,1034.5388 24.009204,-6.3726 -17.594945,-17.4771 -6.41546,23.8485 z" />
+        </g>
+        <circle
+           style="fill:none;stroke:#000000;stroke-width:8.89463425;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+           id="path4804"
+           cx="61.595272"
+           cy="986.29999"
+           r="52.412338" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4813"
+         y="1009.0197"
+         x="125.9498"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:79.11450195px;line-height:125%;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, '"
+           y="1009.0197"
+           x="125.9498"
+           id="tspan4815"
+           sodipodi:role="line"><tspan
+   id="tspan4164"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Medium'">Stationery</tspan>.Store</tspan></text>
+    </g>
+  </g>
+</svg>
