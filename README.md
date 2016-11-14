@@ -3,5 +3,6 @@ Projeto de uma papelaria on-line. O projeto está sendo desenvolvido junto com u
 * JDBC
 * Servlets
 * JSP
+* Bootstrap
 
 A ideia é mostrar/aprender as tecnologias bases e posteriormente evoluir o projeto.
