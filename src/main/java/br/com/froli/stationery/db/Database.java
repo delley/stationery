@@ -1,5 +1,6 @@
 package br.com.froli.stationery.db;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,134 +8,190 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+import javax.money.MonetaryAmount;
+
+import org.javamoney.moneta.Money;
 
 import br.com.froli.stationery.model.Produto;
 import br.com.froli.stationery.model.Setor;
 
 public class Database {
-	
-	private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
-
+	private static final CurrencyUnit CURRENCY = Monetary.getCurrency("BRL");
 	private List<Produto> produtos;
 	private List<Setor> setores;
-	private static Database instance;
-	private Connection con;
-	private static final String SQL_PRODUTO = "SELECT id, descricao, id_setor, fabricante, complemento, preco, oferta FROM produto";
-	private static final String SQL_SETORES = "SELECT id, descricao FROM setores";
-	
+	private static Database instance = null;
+	private Connection con = null;
+	private static final String SQL_PRODUTO = "select PRD_ID, PRD_DESCRICAO, STR_ID, PRD_FABRICANTE, PRD_COMPLEMENTO, PRD_PRECO, PRD_EM_OFERTA FROM TB_PRODUTO";
+	private static String sql2 = "select id, descricao from setores";
+	private static final String SQL_SETORES = "SELECT STR_ID, STR_DESCRICAO FROM TB_SETOR";
+
 	private Database() {
 		produtos = new ArrayList<>();
 		setores = new ArrayList<>();
-
 		try {
 			Class.forName("org.hsqldb.jdbc.JDBCDriver");
-			con = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/stationery");
-			LOGGER.log(Level.INFO, "[Database] connection OK");
+			con = DriverManager.getConnection("jdbc:hsqldb:file:c:/Database/db/stationery", "sa", "");
 		} catch (ClassNotFoundException | SQLException e) {
-			LOGGER.log(Level.INFO, "[Database] connection error");
+			System.out.println("[Database] connection error");
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static Database getInstance() {
 		if (instance == null) {
 			instance = new Database();
 		}
 		return instance;
 	}
-	
-	public void disconnect() {
-		try {
-			if (con != null) {
-				con.close();
-			}
-			instance = null;
-			LOGGER.log(Level.INFO, "[Database] connection closed");
-		} catch (SQLException e) {
-			LOGGER.log(Level.INFO, "[Database] connection close error");
-		}
 
-		con = null;
-	}
-	
-	public Produto getProdutoPorId(Long id) {
-		Produto produto = null;
+	public void disconnect() {
+		
 		try {
-			LOGGER.log(Level.INFO, "[Database.getProdutoPorId] product retrieve");
-			String query = SQL_PRODUTO.concat(" WHERE id = ?");
-			PreparedStatement pstm = con.prepareStatement(query);
-			pstm.setLong(1, id);
-			ResultSet resultSet = pstm.executeQuery();
-			while (resultSet.next()) {
-				produto = new Produto(resultSet.getLong(1), resultSet.getString(2), resultSet.getLong(3),
-						resultSet.getString(4), resultSet.getString(5), resultSet.getBigDecimal(6),
-						resultSet.getBoolean(7));
-			}
-			resultSet.close();
-			pstm.close();
+			if (con != null) 
+				con.close();
+			instance  = null;
+			System.out.println("[Database] connection closed");
 		} catch (SQLException e) {
-			LOGGER.log(Level.INFO, "[Database.getProdutoPorId] SQL error");
+			System.out.println("[Database] connection close error");
 		}
-		return produto;
+		con = null;
+		
 	}
-	
-	public List<Produto> getProdutos() {
-		return getProdutos(-1L);
-	}
-	
-	public List<Produto> getProdutos(Long idSetor) {
+	public Produto getProdutoPorId (String id) {
+		Produto p = null;
+		
 		try {
-			LOGGER.log(Level.INFO, "[Database.getProdutos] data retrieve");
+			System.out.println("[Database.getProdutorPorId] produto retrieve");
+			String query = SQL_PRODUTO + " where ID = ?";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, id);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				p = new Produto(rs.getLong(1), rs.getString(2), getSetorPorID(rs.getLong(3)), rs.getString(4), rs.getString(5),convertFrom( rs.getBigDecimal(6)), rs.getBoolean(7));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("[Database.getProdutoPorId] SQL error");
+		}
+		return p;
+	}
+	
+	public List<Produto> getProdutos(int idSetor) {
+		try {
+			System.out.println("[Database.getProdutorPorId] produto retrieve");
 			produtos.clear();
-			
 			String query = null;
-			PreparedStatement pstm = null;
-			switch (idSetor.intValue()) {
+			PreparedStatement stmt = null;
+			switch (idSetor) {
 			case -1:
-				query = SQL_PRODUTO.concat(" ORDER BY descricao");
-				pstm = con.prepareStatement(query);
+				query = SQL_PRODUTO + " order by descricao";
+				stmt = con.prepareStatement(query);
 				break;
 			case 0:
-				query = SQL_PRODUTO.concat(" WHERE oferta = true ORDER BY descricao");
-				pstm = con.prepareStatement(query);
+				query = SQL_PRODUTO + " where oferta = true order by descricao";
+				stmt = con.prepareStatement(query);
 				break;
 			default:
-				query = SQL_PRODUTO.concat(" WHERE id_setor = ? ORDER BY descricao");
-				pstm = con.prepareStatement(query);
-				pstm.setLong(1, idSetor);
+				query = SQL_PRODUTO + " where id_setor = ? order by descricao";
+				stmt = con.prepareStatement(query);
+				stmt.setInt(1, idSetor);
 			}
+			ResultSet rs = stmt.executeQuery();
+			Produto p = null;
+			while (rs.next()) {
+				p = new Produto(rs.getLong(1), rs.getString(2), getSetorPorID(rs.getLong(3)), rs.getString(4), rs.getString(5),convertFrom( rs.getBigDecimal(6)), rs.getBoolean(7));
+				produtos.add(p);
+			}
+			rs.close();
+			stmt.close();
 			
-			ResultSet resultSet = pstm.executeQuery();
-			Produto produto = null;
-			while (resultSet.next()) {
-				produto = new Produto(resultSet.getLong(1), resultSet.getString(2), resultSet.getLong(3),
-						resultSet.getString(4), resultSet.getString(5), resultSet.getBigDecimal(6),
-						resultSet.getBoolean(7));
-				produtos.add(produto);
-			}
-			resultSet.close();
-			pstm.close();
-		} catch (SQLException e) {
-			LOGGER.log(Level.INFO, "[Database.getProdutos] SQL error");
+		} catch(SQLException e) {
+			System.out.println("[Database.getProdutos] SQL error");
 		}
 		return produtos;
 	}
 	
-	public Setor getSetorPorDescricao(String descricao) {
-		Setor setor = setores.get(0);
-		if(descricao == null) {
-			return setor;
-		}
+	public List<Produto> getProdutos() {
+		return getProdutos(-1);
 		
-		for (Setor s : setores) {
-			if(s.getDescricao().equals(descricao)) {
-				return s;
-			}
-		}
-		
-		return setor;
 	}
 	
+	public Setor getSetorPorDescricao(String descricao) {
+		Setor s = setores.get(0);
+		if (descricao == null)
+			return s;
+		for (Setor ss : setores) {
+			if (ss.getDescricao().equals(descricao))
+				return ss;
+		}
+		return s;
+	}
+	
+	public Setor getSetorPorId(int id) {
+		Setor s = null;
+		try {
+			System.out.println("[Database.getSetorPorId] produto retrieve");
+			String query = sql2 + " where ID = ?";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				s = new Setor(rs.getLong(1), rs.getString(2));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("[Database.getSetorPorId] SQL error");
+		}
+		
+		return s;
+	}
+	
+	public List<Setor> getSetores() {
+		try {
+			System.out.println("[Database.getSetores] produto retrieve");
+			setores.clear();
+			String query = sql2 + " order by id";
+			PreparedStatement stmt = con.prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			Setor s = null;
+			while (rs.next()) {
+				s = new Setor(rs.getLong(1), rs.getString(2));
+				setores.add(s);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("[Database.getSetores] SQL error");
+		}
+		return setores;
+		
+	}
+	
+	private MonetaryAmount convertFrom(BigDecimal dbData) {
+		return Money.of(dbData, CURRENCY);
+	}
+	
+	private Setor getSetorPorID(Long id) {
+		String query = SQL_SETORES.concat(String.format(" WHERE STR_ID ?"));
+		Setor setor = null;
+		try {
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setLong(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				setor = new Setor(rs.getLong(1), rs.getString(2));
+			}
+			stmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return setor;	
+	}
 }

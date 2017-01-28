@@ -29,10 +29,15 @@
 
 		<!-- Flyway -->
 		<flyway-maven-plugin>4.0.2</flyway-maven-plugin>
-		
+
 		<!-- HSQLDB -->
 		<hsqldb.version>2.3.4</hsqldb.version>
 
+		<!-- Hibernate -->
+		<hibernate.version>5.2.6.Final</hibernate.version>
+
+		<!-- JavaMoney -->
+		<moneta.version>1.1</moneta.version>
 
 	</properties>
 
@@ -44,27 +49,37 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javamoney</groupId>
+			<artifactId>moneta</artifactId>
+			<version>${moneta.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<version>${jsp.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>javax.el-api</artifactId>
 			<version>${el.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		 -->
 
 		<dependency>
 			<groupId>org.hsqldb</groupId>
