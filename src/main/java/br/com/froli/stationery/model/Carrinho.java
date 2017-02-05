@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.money.MonetaryAmount;
-
 public class Carrinho {
 	private Map<String, ItemCarrinho<Produto>> conteudo = null;
 	private int totalDeItens = 0;
@@ -14,31 +12,41 @@ public class Carrinho {
 	public Carrinho() {
 		conteudo = new HashMap<>();
 	}
-	public void add(String idProduto, Produto produto) {
-		if(conteudo.containsKey(idProduto)) {
-			ItemCarrinho item = conteudo.get(idProduto);
+	
+	public void add(Produto produto) {
+		String key = produto.getId().toString();
+		if(conteudo.containsKey(key)) {
+			ItemCarrinho<Produto> item = conteudo.get(key);
 			item.setQuantidade(item.getQuantidade() + 1);
 		} else {
 			ItemCarrinho<Produto> item = new ItemCarrinho<Produto>(produto);
-			conteudo.put(idProduto, item);
+			conteudo.put(key, item);
 			totalProdutos++;
 		}
 		totalDeItens++;
 		
 	}
 	
-	public void remove(String idDoProduto) {
-		if(conteudo.containsKey(idDoProduto)) {
-			ItemCarrinho item = conteudo.get(idDoProduto);
+	public Produto remove(String key) {
+		Produto produto = null;
+		if(conteudo.containsKey(key)) {
+			ItemCarrinho<Produto> item = conteudo.get(key);
 			item.setQuantidade(item.getQuantidade() -1);
 			totalDeItens--;
 			if(item.getQuantidade() <= 0) {
-				conteudo.remove(idDoProduto);
+				conteudo.remove(key);
 				totalProdutos--;
 			}
+			produto = item.getItem();
 		}
-	
+		return produto;
 	}
+	
+	public Produto remove(Produto produto) {
+		String key = produto.getId().toString();
+		return remove(key);
+	}
+	
 	public Collection<ItemCarrinho<Produto>> getConteudo(){
 		return conteudo.values();
 	}

@@ -41,20 +41,30 @@ public class ServletOfertas extends HttpServlet {
 			session.setAttribute(CARRINHO_KEY, carrinho);
 		}
 		EntityManager manager = JPAUtil.getEntityManager();
-		Produtos repositorio = new Produtos(manager);
+		Produtos produtos = new Produtos(manager);
 		
-		//List<Produto> produtos = repositorio.emOferta();
-		List<Produto> produtos = repositorio.todos();
+		Produto produto = null;
+		String msg = null;
+		String idProduto = request.getParameter("Add");
+		if(idProduto != null) {
+			produto = produtos.porId(Long.parseLong(idProduto));
+			carrinho.add(produto);
+			msg = "Produto adicionado ao carrinho com sucesso!";
+		}
+		
+		List<Produto> listaProdutos = produtos.emOferta();
+		//List<Produto> listaProdutos = produtos.todos();
 		
 		ServletContext sc = getServletContext();
 		RequestDispatcher dispatcher = sc.getRequestDispatcher("/WEB-INF/templates/ofertas.jsp");
-		request.setAttribute("Produtos", produtos);
+		request.setAttribute("Produtos", listaProdutos);
+		request.setAttribute("msg", msg);
 		dispatcher.forward(request, response);
 		
 	}		
 
 	public String getServletInfo() {
-		return "Servlet de exibição do conteudo do carrinho de compras " + "que tambem permite exclusão deitens";
+		return "Servlet de exibição dos produtos em oferta";
 	}
 
 }

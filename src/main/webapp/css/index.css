@@ -61,6 +61,29 @@ blockquote {
 	border-left: 10px solid #fff;
 }
 
+/* Cart 
+-------------------------------------------------- */
+.empty-cart-wrapper {
+    color: #666;
+}
+
+.empty-cart-sign {
+    color: #a1a1a1;
+    font-size: 5em;
+}
+
+.empty-cart-message .empty-cart-header-message {
+    font-size: 2.5em;
+}
+
+.empty-cart-message .empty-cart-content-message {
+    font-size: 1.4em;
+}
+
+.green-text {
+    color: #5EA20D;
+}
+
 @media ( max-width : 767px) {
 	.perfil {
 		color: #FFF;

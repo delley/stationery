@@ -1,116 +1,84 @@
 package br.com.froli.stationery.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.money.MonetaryAmount;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import br.com.froli.stationery.db.Database;
+import org.javamoney.moneta.Money;
+
 import br.com.froli.stationery.model.Carrinho;
 import br.com.froli.stationery.model.ItemCarrinho;
 import br.com.froli.stationery.model.Produto;
+import br.com.froli.stationery.model.to.ItemCarrinhoTO;
+import br.com.froli.stationery.util.MonetaryUtil;
 
 /**
  * Servlet implementation class ServletCarrinho
  */
+@WebServlet(name = "carrinho", urlPatterns = { "/carrinho" })
 public class ServletCarrinho extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private DecimalFormat df = new DecimalFormat("0.00");
-	private Database db;
-	private static final String DB_KEY = "stationary.db";
 	private static final String CARRINHO_KEY = "stationary.carrinho";
-	public void init() throws ServletException {
-		db = (Database) getServletContext().getAttribute(DB_KEY);
-		if(db == null) {
-			db = Database.getInstance();
-			getServletContext().setAttribute(DB_KEY, db);
-		}
-	}
-	
+
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		HttpSession session = request.getSession(true);
 		Carrinho carrinho = (Carrinho) session.getAttribute(CARRINHO_KEY);
-		if(carrinho == null){
+		if (carrinho == null) {
 			carrinho = new Carrinho();
 			session.setAttribute(CARRINHO_KEY, carrinho);
-		} 
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		out.println("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
-				+ "<title>Stationery Store :: Meu Carrinho</title>"
-				+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-				+ "<link rel=StyleSheet href=\"css/ss.css\" type=\"text/css\"></head>");
-		ServletContext sc = getServletContext();
-		RequestDispatcher dispatcher = sc.getRequestDispatcher("/topo");
-		if(dispatcher != null) {
-			dispatcher.include(request, response);
 		}
-		out.println("<div><table border=0 width=\"640\">"
-				+ "<tr><td width=\"262\">");
-		Produto produto = null;
+
+		String msg = null;
 		String idProduto = request.getParameter("Remove");
-		if(idProduto != null) {
-			produto = db.getProdutoPorId(idProduto);
-			carrinho.remove(idProduto);
+		if (idProduto != null) {
+			Produto produto = carrinho.remove(idProduto);
+			if(produto != null) {
+				msg = String.format("Foi removido de seu carrinho: <b>%s</b>", produto.getDescricao());
+			}
 		} else if (request.getParameter("Clear") != null) {
 			carrinho.clear();
+			msg = "Seu carrinho foi esvaziado!";
 		}
-		
-		out.println("<p><a href=\"" + response.encodeURL("/stationery/catalogo") + "\">Limpar carrinho</a></p><p><a href=\"" +
-				response.encodeURL("/stationery/caixa") + "\">Caixa</a></p></td>");
-		
-		if(produto != null) {
-			out.println("<td bgcolor=\"#BFFFBF\">Foi removido de seu carrinho:" + "<br><i>" + produto.getDescricao() + "</i></td>");
-			
-		} else if (request.getParameter("Clear") != null) {
-			out.println("<tdbgcolor=\"#BFFFBF\"><i>Seu carrinho foi esvaziado!</i></td>");
-		
+
+		int totalItens = carrinho.getTotalIntens();
+		int i = 1;
+		MonetaryAmount total = Money.zero(MonetaryUtil.CURRENCY_BRL);
+		List<ItemCarrinhoTO> itensCarrinho = new ArrayList<ItemCarrinhoTO>();
+		if (totalItens != 0) {
+			ItemCarrinhoTO itemTO = null;
+			for (ItemCarrinho<Produto> item : carrinho.getConteudo()) {
+				itemTO = new ItemCarrinhoTO(item.getItem(), i++, item.getQuantidade());
+				itensCarrinho.add(itemTO);
+				total = total.add(itemTO.getTotal());
+			}
 		}
-		out.println("</try></table></div>");
-		int nitens = carrinho.getTotalIntens();
-		int nprodutos = carrinho.geTotalProdutos();
-		if(nitens != 0) {
-			out.println("<div><table border=0 width=\"640\"><tr bgcolor=\"#DFFFDF\">" +
-					"<th align=right width=\"32\">#</th><th align=left>Produto</th>" +
-					"<th align=right width=\"64\">Quant</th><th align=right width=\"64\">Preco</th>" + 
-					"<th align=right width=\"64\">Total</th></tr>");
-			int i = 1;
-			for(ItemCarrinho<Produto> item: carrinho.getConteudo()) {
-				Produto p = item.getItem();
-				float t = p.getPreco().multiply(item.getQuantidade()).getNumber().floatValue();
-				out.println(i%2==0 ? "<tr bgcolor=\"DFFFDF\">" : "<tr brcolor\"AFFFAF\">");
-				out.println("<td align=right>" + i + "</td><td akugn=left><a href=\"" + response.encodeURL("/stationery/detalhes?Id=" + p.getId()) + "\">" + 
-						p.getDescricao() + "</a></td><t align=right>" + item.getQuantidade() + "<br><a href=\"" + response.encodeURL("/stationery/carrinho?Remove=" +
-						p.getId()) + "\">Remoer</a></td>" + "<td align=right>" + df.format(p.getPreco()) + "</td>" + "<<td align=right" + df.format(t) + "</td></tr>");
-				i++;
-			}
-			out.println(i%2 == 0?"<tr bgcolor=\"DFFFDF\">":"<tr bgcolor=\"AFFFAF\">");
-			out.println("<td colspan=\"4\" align=right><b>Total de Compras</b></td>" +
-			df.format(carrinho.getValorTotal()) + "</td></table></dvi>");
-			}
-			else {
-				out.println("<p><br><br><b>Carrinho vazio.</b></p>");
-			}
-		out.println("<p>Copyright &#169, 2016,SigeR.</p></body></html>");
-		out.close();
-		}
-	public void destroy() {
-		db = null;
+
+		ServletContext sc = getServletContext();
+		RequestDispatcher dispatcher = sc.getRequestDispatcher("/WEB-INF/templates/carrinho.jsp");
+		request.setAttribute("ItensCarrinho", itensCarrinho);
+		request.setAttribute("TotalProdutos", total);
+		request.setAttribute("msg", msg);
+		dispatcher.forward(request, response);
 	}
+
 	public String getServletInfo() {
-		return "Servlet de exibição do conteudo do carrinho de compras " +
-				"que tambem permite exclusão deitens";
+		return "Servlet de exibição do conteudo do carrinho de compras " + "que tambem permite exclusão deitens";
 	}
-	
+
 }

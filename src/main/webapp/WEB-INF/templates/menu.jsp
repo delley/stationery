@@ -13,7 +13,8 @@
 			<div class="collapse navbar-collapse" id="menu">
 				<ul class="nav navbar-nav">
 					<li><a href="ofertas">Ofertas</a></li>
-					<li><a href="carrinho">Loja</a></li>
+					<li><a href="./">Loja</a></li>
+					<li><a href="carrinho">Carrinho</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="" class="dropdown-toggle" data-toggle="dropdown">

@@ -21,35 +21,14 @@
 	<jsp:include page="menu.jsp" />
 
 	<div class="container">
-		<ol class="breadcrumb">
-			<li class="active">Início</li>
-		</ol>
-		<%--
-		<table class = "table table-striped">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Descricao</th>
-					<th>Setor</th>
-					<th>Fabricante</th>
-					<th>Complemento</th>
-					<th>Preço</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="produto" items="${Produtos}">
-				<tr>
-					<td>${produto.id}</td>
-					<td>${produto.descricao}</td>
-					<td>${produto.setor.descricao}</td>
-					<td>${produto.fabricante}</td>
-					<td>${produto.complemento}</td>
-					<td><fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${produto.preco.number}" type="currency" /></td>
-				</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		--%>
+		<c:if test="${not empty msg}">
+			<div class="alert alert-success alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<c:out value="${msg}" />
+			</div>
+		</c:if>
 		<div class="row">
 		<c:forEach var="produto" items="${Produtos}">
 			<div class="col-sm-6 col-md-4">
@@ -59,7 +38,7 @@
             		<h3>${produto.descricao}</h3>
             		<p>${produto.complemento}</p>
             		<h2><fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${produto.preco.number}" type="currency" /></h2>
-            		<p><a href="#" class="btn btn-primary" role="button">Comprar</a></p>
+            		<p><a href="?Add=${produto.id}" class="btn btn-primary" role="button">Comprar</a></p>
           		</div>
           		</div>
 			</div>
