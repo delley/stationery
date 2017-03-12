@@ -21,7 +21,8 @@
 	<jsp:include page="menu.jsp" />
 
 	<div class="container">
-		
+		<h3>Meu Carrinho</h3>
+		<p>Confira os itens adicionados</p>
 		<c:if test="${not empty msg}">
 			<div class="alert alert-success alert-dismissible" role="alert">
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,23 +33,24 @@
 		</c:if>
 		<c:choose>
 			<c:when test="${not empty ItensCarrinho}">
-			
-				<table class = "table table-striped">
+				<div class="row">
+  					<div class="col-md-6"><a href="ofertas" class="btn btn-primary continue-button">Comprar mais pordutos</a></div>
+  					<div class="col-md-6"><a href="ofertas" class="btn btn-danger continue-button pull-right">Concluir compra</a></div>
+				</div>
+				<table class = "table table-hover vertical-align">
 					<thead>
 						<tr>
-							<th>#</th>
 							<th>Produto</th>
-							<th class="text-center">Quant.</th>
-							<th class="text-right">Preço</th>
-							<th class="text-right">Total</th>
+							<th class="text-center">Quantidade</th>
+							<th class="text-right">Valor Unitário</th>
+							<th class="text-right">Valor Total</th>
 							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach var="item" items="${ItensCarrinho}">
 						<tr>
-							<td>${item.indice}</td>
-							<td>${item.produto}</td>
+							<td><img alt="${item.produto}" height="64" class="card-img-top" src="img/produtos/p${item.id}.jpg">&nbsp;&nbsp;&nbsp;${item.produto}</td>
 							<td class="text-center">${item.quantidade}</td>
 							<td class="text-right"><fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${item.preco.number}" type="currency" /></td>
 							<td class="text-right"><fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${item.total.number}" type="currency" /></td>
@@ -57,9 +59,15 @@
 						</c:forEach>
 					</tbody>
 					<tfoot>
-						<tr><td colspan="6" class="text-right"><h4>Total de Compras: <fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${TotalProdutos.number}" type="currency" /></h4></td></tr>
+						<tr>
+							<td colspan="2"><a href="?Clear=true" class="btn btn-primary continue-button">Esvaziar carrinho</a></td>
+							<td colspan="4" class="text-right"><h4>Total de Compras: <fmt:setLocale value="pt_BR"/><fmt:formatNumber value="${TotalProdutos.number}" type="currency" /></h4></td></tr>
 					</tfoot>
 				</table>
+				<div class="row">
+  					<div class="col-md-6"><a href="ofertas" class="btn btn-primary continue-button">Comprar mais pordutos</a></div>
+  					<div class="col-md-6"><a href="ofertas" class="btn btn-danger continue-button pull-right">Concluir compra</a></div>
+				</div>
 			</c:when>
 			<c:otherwise>
 				<div class="row">
@@ -73,7 +81,7 @@
 	            				Para inserir produtos no seu carrinho, navegue pelo shopping ou utilize a busca do site. Ao encontrar os produtos desejados, clique no botão <span class="green-text">"Comprar"</span>.
 	        				</div>
 	        				<div class="back-shopping-buttons buttons-wrapper">
-	            				<a class="btn btn-primary continue-button">Continuar comprando</a>
+	            				<a href="ofertas" class="btn btn-primary continue-button">Continuar comprando</a>
 	        				</div>
 	    				</article>
 					</div>

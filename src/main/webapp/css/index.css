@@ -84,6 +84,13 @@ blockquote {
     color: #5EA20D;
 }
 
+/* Table Vertical Align
+--------------------------------------------------- */
+
+table.vertical-align > tbody > tr > td {
+	vertical-align: middle;
+}
+
 @media ( max-width : 767px) {
 	.perfil {
 		color: #FFF;

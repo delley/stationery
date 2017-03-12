@@ -78,7 +78,7 @@ public class ServletCarrinho extends HttpServlet {
 	}
 
 	public String getServletInfo() {
-		return "Servlet de exibição do conteudo do carrinho de compras " + "que tambem permite exclusão deitens";
+		return "Servlet de exibição do conteudo do carrinho de compras que tambem permite exclusão deitens";
 	}
 
 }
